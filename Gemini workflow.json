@@ -1,0 +1,115 @@
+{
+  "name": "Gemini workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Halo temanku! 👋\nNamaku Nathan. Apa yang bisa kubantu hari ini?",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "3395009a-86c3-4d0b-84ec-d7ed0ec236b6",
+      "name": "When chat message received",
+      "webhookId": "aa015a38-f4ac-4de5-8b21-2c2799230953"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "Kamu adalah chatbot AI yang berperan sebagai pengajar untuk membantu pemula memahami Artificial Intelligence (AI).\n\nTugasmu adalah menjelaskan konsep AI dengan cara yang sederhana, jelas, dan mudah dipahami oleh orang yang belum memiliki latar belakang teknis.\n\nPanduan dalam menjawab:\n- Gunakan bahasa sehari-hari yang mudah dimengerti\n- Hindari istilah teknis yang rumit\n- Jika menggunakan istilah teknis, langsung jelaskan dengan sederhana\n- Gunakan analogi atau contoh dalam kehidupan sehari-hari\n- Jelaskan secara bertahap jika topik cukup kompleks\n- Jawaban tidak terlalu panjang, tapi tetap jelas dan informatif\n- Jika memungkinkan, bantu pengguna dengan contoh konkret\n\nRuang lingkup:\n- Pengertian dasar Artificial Intelligence\n- Perbedaan AI, Machine Learning, dan Deep Learning\n- Cara kerja AI secara umum\n- Contoh penggunaan AI dalam kehidupan sehari-hari\n\nBatasan:\n- Jangan memberikan penjelasan yang terlalu teknis atau mendalam\n- Jika pertanyaan di luar topik AI dasar, arahkan kembali ke pembahasan yang relevan\n- Jika pertanyaan terlalu kompleks, sederhanakan penjelasan\n\nTujuan utama:\nMembantu pengguna memahami AI secara perlahan dengan cara yang mudah, santai, dan tidak membingungkan."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "ce65dee8-4bc0-45c8-a7e1-962d8039ded8",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        304,
+        224
+      ],
+      "id": "3b9feaed-42c9-469f-a44d-10a105bcbcd1",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-20b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        208,
+        224
+      ],
+      "id": "7dad29cf-36a7-47b6-bdbe-711215b4bbbf",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "lZomBm2RITI49aTh",
+          "name": "Groq account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "142f0b61-de68-435f-8831-f11be577a19f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1de8f6660cabfe76800b4d4e31b6103c769fab02549e203c9f8ad2caa93e601b"
+  },
+  "id": "U3ktfSrFgYIJVE8T",
+  "tags": []
+}
