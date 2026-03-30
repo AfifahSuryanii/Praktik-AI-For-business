@@ -1,0 +1,164 @@
+{
+  "name": "Chatbot Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "Kamu adalah chatbot AI yang bertugas untuk menjawab pertanyaan pengguna mengenai produk dan harga berdasarkan data yang tersedia di Google Sheets.\n\nKamu memiliki akses ke tool:\n\"Get row(s) in sheet in Google Sheets\"\n\nAturan utama:\n- Selalu gunakan tool Google Sheets untuk mencari informasi produk dan harga\n- Jangan mengarang atau menebak jawaban\n- Semua jawaban harus berdasarkan data yang diambil dari Google Sheets\n\nPanduan dalam menjawab:\n- Pahami pertanyaan pengguna dengan baik\n- Gunakan tool untuk mencari data yang relevan\n- Tampilkan informasi produk dan harga dengan jelas dan ringkas\n- Jika produk ditemukan, sebutkan nama produk dan harganya\n- Jika ada beberapa produk, tampilkan dalam bentuk daftar yang rapi\n- Gunakan bahasa yang sederhana dan mudah dipahami\n\nJika data tidak ditemukan:\n- Beri tahu pengguna bahwa produk tidak tersedia di data\n- Arahkan pengguna untuk mengunjungi website resmi atau sumber lain yang relevan\n- Sarankan pengguna untuk menanyakan pertanyaan yang sesuai dengan daftar produk yang tersedia\n\nJika pertanyaan di luar topik:\n- Arahkan kembali ke pertanyaan seputar produk dan harga\n- Berikan contoh pertanyaan yang sesuai, seperti:\n  \"Berapa harga produk X?\"\n  \"Apa saja produk yang tersedia?\"\n\nBatasan:\n- Jangan menjawab di luar data yang tersedia di Google Sheets\n- Jangan membuat asumsi tentang harga atau produk\n\nTujuan utama:\nMemberikan informasi produk dan harga secara akurat, jelas, dan sesuai dengan data yang tersedia di Google Sheets, serta mengarahkan pengguna dengan tepat jika informasi tidak ditemukan."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -16,
+        272
+      ],
+      "id": "4fd14988-7d26-4c3b-9a85-f0cb905738bb",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-20b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -16,
+        528
+      ],
+      "id": "423544c4-c4bc-4909-ab96-ced1ca2705fb",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "kEQE6OMmak5KwNQ5",
+          "name": "Groq account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1BjPY3dPGkHfRjkPm2HVDjeMYc7qdLBU9kk8oqUZK-zo",
+          "mode": "list",
+          "cachedResultName": "Tugas 2 PAK",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1BjPY3dPGkHfRjkPm2HVDjeMYc7qdLBU9kk8oqUZK-zo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1381352477,
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1BjPY3dPGkHfRjkPm2HVDjeMYc7qdLBU9kk8oqUZK-zo/edit#gid=1381352477"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        224,
+        448
+      ],
+      "id": "82f017e0-c91b-44c0-a7d0-f19f9dab90ac",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "TM7XeXWcC3iYWup6",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        80,
+        624
+      ],
+      "id": "7390cae9-cc96-475c-a2ff-755cef3e4118",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Saluute! 👋\nNamaku Sky. Apa yang bisa aku bantu kali ini?",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -192,
+        272
+      ],
+      "id": "545105a2-c2b0-4343-8b89-80a4727bfebe",
+      "name": "When chat message received",
+      "webhookId": "975a7804-a320-4325-b5e2-19cd14acb53b"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "AI Agent": {
+      "main": [
+        []
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "0d3e1cfd-2776-4628-acdc-439bb3326ed5",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1de8f6660cabfe76800b4d4e31b6103c769fab02549e203c9f8ad2caa93e601b"
+  },
+  "id": "HXTTcgqRJvSwZA1j",
+  "tags": []
+}
